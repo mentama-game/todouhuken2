@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="game-share-url" content="https://mentama-game.github.io/todouhuken2/">
+  <meta name="description" content="15秒、記憶だけ。消しゴムで直して、描いた都道府県を画像でシェア。">
+  <meta name="referrer" content="no-referrer">
+  <title>記憶だけで都道府県</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23e75b35'/%3E%3Cpath d='M10 28L15 10L25 14L30 25L20 30Z' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./game.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">県</span>記憶だけで都道府県</a><span class="header-note">15 SEC / JUST MEMORY</span></header>
+  <main>
+    <div class="intro"><p class="eyebrow">THE OUTLINE CHALLENGE</p><h1>どこまで、<br class="mobile-break">覚えてる？</h1><p>地図は見ない。頼れるのは、あなたの記憶だけ。</p></div>
+    <section class="game-layout" aria-label="都道府県の輪郭ゲーム">
+      <div class="drawing-card">
+        <div class="board-header"><div><span class="field-label">お題</span><h2 id="prompt">準備中</h2></div><div class="clock" aria-label="残り時間"><span id="remaining">15.0</span><span class="seconds">秒</span></div></div>
+        <div class="time-track" aria-hidden="true"><div id="time-bar"></div></div>
+        <div class="drawing-tools" role="group" aria-label="描く道具"><button id="pen" type="button" aria-pressed="true" disabled>✎ ペン</button><button id="eraser" type="button" aria-pressed="false" disabled>消しゴム</button><span>離しても続けて描けます</span></div>
+        <div class="canvas-wrap"><canvas id="board" aria-label="指かマウスで輪郭を描く領域"></canvas><div id="canvas-hint" class="canvas-hint"><span class="pencil" aria-hidden="true">✎</span><strong>記憶を、かたちに。</strong><span>スタートでお題が出ます</span></div><span class="north" aria-hidden="true">↑ N</span></div>
+        <div class="board-footer"><span id="drawing-note">15秒で、輪郭をつなごう。消しゴムも使えます。</span><span class="small-dot" aria-hidden="true"></span></div>
+      </div>
+      <aside class="side-panel">
+        <div id="result-panel" class="result-panel" hidden aria-live="polite"><p class="eyebrow">YOUR RESULT</p><h2 id="verdict"></h2><p id="reason"></p><div class="metrics"><div><span>重なり率</span><strong id="iou">—</strong><small>85%以上でクリア</small></div><div><span>輪郭ずれ</span><strong id="distance">—</strong><small>5%以内でクリア</small></div></div><p class="legend"><span class="answer-key">━━ あなたの輪郭</span><span class="reference-key">┄┄ 正解の輪郭</span></p></div>
+        <div id="rules"><p class="eyebrow">HOW TO PLAY</p><h2>15秒。描いて、直して。<br>記憶だけ。</h2><ol><li><span>01</span><div><strong>お題はランダム</strong><p>47都道府県のどれかが出題されます。</p></div></li><li><span>02</span><div><strong>消しゴムで、何度でも</strong><p>指を離してもOK。15秒までは描き直せます。</p></div></li><li><span>03</span><div><strong>線をつないで、輪郭を閉じる</strong><p>最大の陸地だけ。離島や湖の内周は不要です。</p></div></li></ol><p class="rule-note">位置と大きさは補正します。<br>北を上にして、形を正確に描いてね。<br>囲んだ区域が複数あるときは最大の区域で判定します。</p></div>
+        <p id="status" role="status">データを読み込んでいます…</p>
+        <button id="start" type="button" disabled>スタート <span aria-hidden="true">→</span></button>
+        <section id="image-panel" class="image-panel" hidden aria-label="結果画像の保存と共有"><button id="share-image" type="button" disabled>画像付きで共有</button><a id="save-image" class="save-image" hidden>結果画像を保存</a><button id="retry-image" type="button" class="secondary" hidden>画像をもう一度作る</button><p id="image-status" role="status"></p><details id="image-preview" hidden><summary>共有する画像を見る</summary><img id="result-preview" alt="県名とずれの割合、描いた都道府県と正解を重ねた結果画像"></details></section>
+        <a id="share" class="share-button" hidden target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Xの投稿画面を開く</a>
+        <button id="reload" type="button" class="secondary" hidden>再読み込み</button>
+        <p class="side-footnote">うまく描けても、描けなくても。<br>もう一県、挑戦してみよう。</p>
+      </aside>
+    </section>
+    <details class="sources"><summary>判定ルール・データの出典</summary><p>残った線が囲む最大の区域を採点します。線の切れ目は自動で結びません。形の重なり85%以上、かつ双方向の輪郭距離の95%点が長辺の5%以内で正解です。</p><p>出典：<a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2026.html" target="_blank" rel="noopener noreferrer">国土交通省「国土数値情報(行政区域)」2026年版</a>を加工。県別結合・正積投影・最大陸地区域の外周抽出・内周除去・簡略化・正規化を行っています。東京都は本土、沖縄県は沖縄本島です。</p><p><a href="./data/SOURCES.md">データの版・加工・利用条件の詳細</a></p><p>描画・判定・画像作成は端末内で行います。保存・共有はボタンを押したときだけ。共有先にXがない場合は、結果画像を保存してXの投稿画面で添付してください。生の座標は送信しません。</p></details>
+  </main>
+  <footer class="site-footer"><span>記憶だけで都道府県</span><span>NO MAP. JUST MEMORY.</span></footer>
+</body>
+</html>
